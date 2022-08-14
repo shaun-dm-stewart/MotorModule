@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.32804.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MotorModule", "MotorModule.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArduinoJson-6.19.4", "C:\Users\Shaun\Documents\Arduino\libraries\ArduinoJson\ArduinoJson-6.19.4.vcxitems", "{9452DAA8-A1E9-4C00-8F8C-B4CA3C55AC1F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uNet-1.0.0", "C:\Users\Shaun\Documents\Arduino\libraries\uNet\uNet-1.0.0.vcxitems", "{3544ED6D-B959-4D09-87A2-B2C528C7C466}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Servo-1.1.8", "C:\Users\Shaun\Documents\Arduino\libraries\Servo\Servo-1.1.8.vcxitems", "{E223AC39-2253-4072-9BEC-314FAA50171C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EEPROM-2.0", "C:\Users\Shaun\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.5\libraries\EEPROM\EEPROM-2.0.vcxitems", "{F42E34B3-8544-4CFF-B00F-E49EA109F946}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x86.ActiveCfg = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x86.Build.0 = Debug|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.ActiveCfg = Release|Win32
+		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ABE5527E-EDFD-4733-8423-1636AEF62ABA}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		C:\Users\Shaun\Documents\Arduino\libraries\uNet\uNet-1.0.0.vcxitems*{3544ed6d-b959-4d09-87a2-b2c528c7c466}*SharedItemsImports = 9
+		C:\Users\Shaun\Documents\Arduino\libraries\ArduinoJson\ArduinoJson-6.19.4.vcxitems*{9452daa8-a1e9-4c00-8f8c-b4ca3c55ac1f}*SharedItemsImports = 9
+		C:\Users\Shaun\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.5\libraries\EEPROM\EEPROM-2.0.vcxitems*{c5f80730-f44f-4478-bdae-6634efc2ca88}*SharedItemsImports = 4
+		C:\Users\Shaun\Documents\Arduino\libraries\ArduinoJson\ArduinoJson-6.19.4.vcxitems*{c5f80730-f44f-4478-bdae-6634efc2ca88}*SharedItemsImports = 4
+		C:\Users\Shaun\Documents\Arduino\libraries\Servo\Servo-1.1.8.vcxitems*{c5f80730-f44f-4478-bdae-6634efc2ca88}*SharedItemsImports = 4
+		C:\Users\Shaun\Documents\Arduino\libraries\uNet\uNet-1.0.0.vcxitems*{c5f80730-f44f-4478-bdae-6634efc2ca88}*SharedItemsImports = 4
+		C:\Users\Shaun\Documents\Arduino\libraries\Servo\Servo-1.1.8.vcxitems*{e223ac39-2253-4072-9bec-314faa50171c}*SharedItemsImports = 9
+		C:\Users\Shaun\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.5\libraries\EEPROM\EEPROM-2.0.vcxitems*{f42e34b3-8544-4cff-b00f-e49ea109f946}*SharedItemsImports = 9
+	EndGlobalSection
+EndGlobal
