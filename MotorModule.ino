@@ -25,7 +25,8 @@
 int _moduleAddress;
 int _steeringAngle;
 int _revolutions;
-int _commandOrigin = 0;
+int _commandOrigin = 0;			// This is the origin specified in the data packet.  Can be spoofed.
+int _origin;					// This is the actual origin of the datapacket.  Cannot be spoofed.
 volatile int _channelACounter;
 volatile int _commandStatus;
 char _inBuffer[150];
@@ -48,12 +49,15 @@ void transmitDebug(char* output)
 }
 #endif
 
-void dataReceived(unsigned char* data)
+void dataReceived(unsigned char* data, int source)
 {
 	_dataBuffer = data;
 	_commandAvailable = true;
+	_origin = source;
+
 #ifdef INTEGRATION
 	Serial1.print("uNet.ino received: ");
+	Serial1.print(source);
 	Serial1.println((char*)data);
 #endif
 }
@@ -65,6 +69,7 @@ void dataSent()
 void transmitResponse(char* output)
 {
 	_socket.writePacket(_commandOrigin, (unsigned char*)output);
+
 #ifdef INTEGRATION
 	transmitDebug(output);
 #endif
@@ -79,6 +84,7 @@ void forwardSelected() {
 	_steeringServo.write(_steeringAngle);
 	digitalWrite(REVERSE_PIN, LOW);
 	digitalWrite(FORWARD_PIN, HIGH);
+
 #ifdef INTEGRATION
 	transmitDebug("Forward selected");
 #endif
@@ -89,6 +95,7 @@ void reverseSelected() {
 	_steeringServo.write(_steeringAngle);
 	digitalWrite(FORWARD_PIN, LOW);
 	digitalWrite(REVERSE_PIN, HIGH);
+
 #ifdef INTEGRATION
 	transmitDebug("Reverse selected");
 #endif
@@ -109,18 +116,20 @@ void commandBuffer()
 
 void identification()
 {
-#ifdef INTEGRATION
-	transmitDebug("Identification selected");
-#endif
 	char id[40];
 	sprintf(id, "{\"origin\":%d,\"id\":\"motor\"}", _moduleAddress);
 	transmitResponse(id);
 	_commandAvailable = false;
+
+#ifdef INTEGRATION
+	transmitDebug("Identification selected");
+#endif
 }
 
 void stopSelected() {
 	digitalWrite(FORWARD_PIN, LOW);
 	digitalWrite(REVERSE_PIN, LOW);
+
 #ifdef INTEGRATION
 	transmitDebug("Stop selected");
 #endif
@@ -155,9 +164,11 @@ int decodeCommand()
 		serializeJson(errPacket, errData, bufferSize);
 		errPacket["type"] = "error";
 		errPacket["packet"] = err.c_str();
+
 #ifdef INTEGRATION
 		transmitDebug("Error in decode");
 #endif
+
 	}
 	else
 	{
@@ -168,9 +179,11 @@ int decodeCommand()
 		const char* messageType = root["type"];
 		if (strcmp(messageType, "nav") == 0)
 		{
+
 #ifdef INTEGRATION
 			transmitDebug("Navigate selected");
 #endif
+
 			// The device has just received instructions and is passing them to the run memory
 			result = 1;
 			_motorCommands.setSystemState = root["state"];
@@ -231,23 +244,25 @@ void executeCommand()
 			_motorStatus.revolutionscompleted = 0;
 			_channelACounter = 0;
 			_executeCommand = true;
-			switch (_motorCommands.motorCommand)
+			switch (_motorCommands.motorCommand) 
 			{
-			case FORWARD:
-				_commandStatus == WORKING;
-				forwardSelected();
-				break;
-			case REVERSE:
-				_commandStatus == WORKING;
-				reverseSelected();
-				break;
-			case STOP:
-				stopSelected();
-				break;
+				case FORWARD:
+					_commandStatus == WORKING;
+					forwardSelected();
+					break;
+				case REVERSE:
+					_commandStatus == WORKING;
+					reverseSelected();
+					break;
+				case STOP:
+					stopSelected();
+					break;
+
 #ifdef INTEGRATION
-			default:
-				transmitDebug("Command misunderstood: ");
+				default:
+					transmitDebug("Command misunderstood: ");
 #endif
+
 			}
 			break;
 		case 5:
@@ -267,7 +282,8 @@ void executeCommand()
 }
 
 // the setup function runs once when you press reset or power the board
-void setup() {
+void setup() 
+{
 	// Get the preprogrammed module address
 	_moduleAddress = EEPROM.read(0);
 	Serial.begin(9600);
@@ -301,7 +317,8 @@ void setup() {
 }
 
 // the loop function runs over and over again until power down or reset
-void loop() {
+void loop() 
+{
 	_socket.readPacket();
 	executeCommand();
 }
