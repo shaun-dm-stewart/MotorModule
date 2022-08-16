@@ -185,7 +185,6 @@ int decodeCommand()
 
 			// The device has just received instructions and is passing them to the run memory
 			result = 1;
-			_motorCommands.setSystemState = root["state"];
 			_motorCommands.motorCommand = root["command"];
 			_motorCommands.motorRevolutions = root["revs"];
 			_motorCommands.motorSpeed = map(root["speed"], 0, 100, 0, 255);
@@ -293,7 +292,6 @@ void setup()
 	_motorStatus.currentSteeringAngle = 90;
 	_motorStatus.revolutionscompleted = 0;
 
-	_motorCommands.setSystemState = PREPARE;
 	_motorCommands.motorCommand = STOP;
 	_motorCommands.motorSpeed = 0;
 	_motorCommands.motorRevolutions = 0;

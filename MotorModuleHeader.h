@@ -16,25 +16,9 @@ struct motorStatusStruct {
 };
 
 struct motorStruct {
-	int setSystemState;
 	int motorCommand;
 	int motorSpeed;
 	int motorRevolutions;
 	int steeringAngle;
 };
-
-//
-//union commandData {
-//	motorStruct instructions;
-//	char commandBuffer[sizeof(motorStruct)];
-//};
-//union commandStatus {
-//	motorStatusStruct status;
-//	char statusBuffer[sizeof(motorStatusStruct)];
-//};
-//
-//struct motorData {
-//	int slaveAddress;
-//	commandData motorCommand;
-//};
 
