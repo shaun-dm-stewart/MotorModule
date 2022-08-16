@@ -9,37 +9,32 @@
 #define STOP 6
 
 struct motorStatusStruct {
-	int motorNumber;
+
 	int commandStatus;
 	int revolutionscompleted;
 	int currentSteeringAngle;
-};
-
-struct motorStatusPacket {
-	int slaveAddress;
-	motorStatusStruct motorStatus;
 };
 
 struct motorStruct {
 	int setSystemState;
 	int motorCommand;
 	int motorSpeed;
-	volatile int motorRevolutions;
+	int motorRevolutions;
 	int steeringAngle;
 };
 
-union commandData {
-	motorStruct instructions;
-	char commandBuffer[sizeof(motorStruct)];
-};
-
-union commandStatus {
-	motorStatusStruct status;
-	char statusBuffer[sizeof(motorStatusStruct)];
-};
-
-struct motorData {
-	int slaveAddress;
-	commandData motorCommand;
-};
+//
+//union commandData {
+//	motorStruct instructions;
+//	char commandBuffer[sizeof(motorStruct)];
+//};
+//union commandStatus {
+//	motorStatusStruct status;
+//	char statusBuffer[sizeof(motorStatusStruct)];
+//};
+//
+//struct motorData {
+//	int slaveAddress;
+//	commandData motorCommand;
+//};
 

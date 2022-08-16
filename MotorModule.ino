@@ -28,7 +28,6 @@ int _revolutions;
 int _commandOrigin = 0;			// This is the origin specified in the data packet.  Can be spoofed.
 int _origin;					// This is the actual origin of the datapacket.  Cannot be spoofed.
 volatile int _channelACounter;
-volatile int _commandStatus;
 char _inBuffer[150];
 char _cmdBuffer[150];
 bool _commandAvailable = false;
@@ -40,7 +39,7 @@ motorStatusStruct _motorStatus;
 uNetSocket _socket;
 Servo _steeringServo;
 
-//#define INTEGRATION
+#define INTEGRATION
 
 #ifdef INTEGRATION
 void transmitDebug(char* output)
@@ -81,7 +80,7 @@ void channelATriggered() {
 
 void forwardSelected() {
 	analogWrite(MOTOR_SPEED_PIN, _motorCommands.motorSpeed);
-	_steeringServo.write(_steeringAngle);
+	_steeringServo.write(_motorCommands.steeringAngle);
 	digitalWrite(REVERSE_PIN, LOW);
 	digitalWrite(FORWARD_PIN, HIGH);
 
@@ -106,7 +105,7 @@ void commandBuffer()
 	char _outBuffer[150];
 	sprintf(_outBuffer, "{\"origin\":%d,\"type\":\"cbuf\",\"packet\":{\"speed\":%d,\"cmd\":%d,\"steering\":%d,\"revs\":%d}}"
 		, _moduleAddress
-		, _motorCommands.motorSpeed
+		, map(_motorCommands.motorSpeed, 0, 255, 0, 100)
 		, _motorCommands.motorCommand
 		, _motorCommands.steeringAngle
 		, _motorCommands.motorRevolutions);
@@ -139,7 +138,7 @@ void statusRequest() {
 	char _outBuffer[150];
 	sprintf(_outBuffer, "{\"origin\":%d,\"type\":\"motor data\",\"packet\":{\"speed\":%d,\"cmd\":%d,\"steering\":%d,\"revs\":%d}}"
 		, _moduleAddress
-		, _motorCommands.motorSpeed
+		, map(_motorCommands.motorSpeed, 0, 255, 0, 100)
 		, _motorCommands.motorCommand
 		, _steeringAngle
 		, _revolutions);
@@ -189,11 +188,10 @@ int decodeCommand()
 			_motorCommands.setSystemState = root["state"];
 			_motorCommands.motorCommand = root["command"];
 			_motorCommands.motorRevolutions = root["revs"];
-			_motorCommands.motorSpeed = root["speed"];
+			_motorCommands.motorSpeed = map(root["speed"], 0, 100, 0, 255);
 			_motorCommands.steeringAngle = root["steering"];
 		}
-		else if (strcmp(messageType, "id") == 0)
-		{
+		else if (strcmp(messageType, "id") == 0) {
 			result = 2;
 		}
 		else if (strcmp(messageType, "stat") == 0) {
@@ -218,7 +216,7 @@ void executeCommand()
 		_motorStatus.revolutionscompleted = _channelACounter / PULSES_PER_REVOLUTION;
 		if (_motorStatus.revolutionscompleted >= _motorCommands.motorRevolutions) {
 			stopSelected();
-			_commandStatus = COMPLETE;
+			_motorStatus.commandStatus = COMPLETE;
 			_navigationLoaded = false;
 			_commandAvailable = false;
 			_executeCommand = false;
@@ -231,7 +229,7 @@ void executeCommand()
 		switch (decodeCommand())
 		{
 		case 1:
-			_commandAvailable = false;
+			commandBuffer();
 			_navigationLoaded = true;
 			break;
 		case 2:
@@ -247,11 +245,11 @@ void executeCommand()
 			switch (_motorCommands.motorCommand) 
 			{
 				case FORWARD:
-					_commandStatus == WORKING;
+					_motorStatus.commandStatus = WORKING;
 					forwardSelected();
 					break;
 				case REVERSE:
-					_commandStatus == WORKING;
+					_motorStatus.commandStatus = WORKING;
 					reverseSelected();
 					break;
 				case STOP:
@@ -270,7 +268,7 @@ void executeCommand()
 			break;
 		case -1:
 		default:
-			_commandStatus = COMPLETE;
+			_motorStatus.commandStatus = COMPLETE;
 			_navigationLoaded = false;
 			_commandAvailable = false;
 #ifdef INTEGRATION
@@ -291,8 +289,7 @@ void setup()
 #ifdef INTEGRATION
 	Serial1.begin(9600);
 #endif
-	_motorStatus.motorNumber = _moduleAddress;
-	_commandStatus = STOP;
+	_motorStatus.commandStatus = STOP;
 	_motorStatus.currentSteeringAngle = 90;
 	_motorStatus.revolutionscompleted = 0;
 
